@@ -12,6 +12,7 @@ const CourseChatbot = ({ courseName, chapterName }) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+
   const handleSend = async () => {
     if (!input.trim()) return;
     

@@ -13,57 +13,100 @@ const ChapterList = ({ course, refreshData }) => {
   // Safely get chapters (defaults to empty array if missing)
   const chapters = course?.courseOutput?.chapters || [];
 
-  const handleFetchVideo = async (chapterIndex) => {
-    const chapter = chapters[chapterIndex]; // Ensure 'chapters' is defined from course.courseOutput.chapters
+  // const handleFetchVideo = async (chapterIndex) => {
+  //   const chapter = chapters[chapterIndex]; // Ensure 'chapters' is defined from course.courseOutput.chapters
+  //   if (!chapter) return;
+
+  //   setLoadingVideo(chapterIndex);
+
+  //   // 1. DATA PREP
+  //   const chapterName = (chapter.name || chapter.chapter_name || chapter.title || "").trim();
+  //   const courseName = (course?.courseOutput?.course_name || course?.name || "").trim();
+  //   const duration = chapter.duration || "";
+
+  //   try {
+  //     // 2. FETCH (Compulsory)
+  //     const videoUrl = await fetchYoutubeUrl({
+  //         courseName: courseName,
+  //         chapterName: chapterName,
+  //         duration: duration 
+  //     });
+
+  //     if (!videoUrl) {
+  //       alert("YouTube search failed. Please try again.");
+  //       setLoadingVideo(null);
+  //       return;
+  //     }
+
+  //     // 3. SAVE
+  //     await fetch(`/api/courses/${course.courseId}/chapters/${chapterIndex}`, {
+  //       method: "PUT",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         courseId: course.courseId,
+  //         chapterIndex: chapterIndex,
+  //         chapterName: chapterName,
+  //         videoUrl: videoUrl,
+  //         aiContent: chapter.aiContent,
+  //         duration: duration
+  //       }),
+  //     });
+
+  //     refreshData();
+      
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setLoadingVideo(null);
+  //   }
+  // };
+
+
+
+
+// second one
+const handleFetchVideo = async (chapterIndex) => {
+    const chapter = chapters[chapterIndex];
     if (!chapter) return;
 
     setLoadingVideo(chapterIndex);
 
-    // 1. DATA PREP
+    // 1. Data Prep
     const chapterName = (chapter.name || chapter.chapter_name || chapter.title || "").trim();
     const courseName = (course?.courseOutput?.course_name || course?.name || "").trim();
     const duration = chapter.duration || "";
 
     try {
-      // 2. FETCH (Compulsory)
+      // 2. Fetch
       const videoUrl = await fetchYoutubeUrl({
           courseName: courseName,
           chapterName: chapterName,
           duration: duration 
       });
 
-      if (!videoUrl) {
-        alert("YouTube search failed. Please try again.");
-        setLoadingVideo(null);
-        return;
+      // 3. Save (Even if videoUrl is a fallback, save it so we can proceed)
+      if (videoUrl) {
+          await fetch(`/api/courses/${course.courseId}/chapters/${chapterIndex}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              courseId: course.courseId,
+              chapterIndex: chapterIndex,
+              chapterName: chapterName,
+              videoUrl: videoUrl,
+              aiContent: chapter.aiContent,
+              duration: duration
+            }),
+          });
+          refreshData(); // Refresh UI
       }
-
-      // 3. SAVE
-      await fetch(`/api/courses/${course.courseId}/chapters/${chapterIndex}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseId: course.courseId,
-          chapterIndex: chapterIndex,
-          chapterName: chapterName,
-          videoUrl: videoUrl,
-          aiContent: chapter.aiContent,
-          duration: duration
-        }),
-      });
-
-      refreshData();
       
     } catch (err) {
-      console.error(err);
+      console.error("Video Error:", err);
     } finally {
       setLoadingVideo(null);
     }
   };
-
-
-
-
   
 
   return (
