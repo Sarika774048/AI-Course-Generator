@@ -76,3 +76,80 @@ export const UserCourseProgress = pgTable('userCourseProgress', {
   totalXP: integer('totalXP').default(0),
   lastAccessed: timestamp('lastAccessed').defaultNow(),
 });
+
+
+// schema for resume building
+
+export const UserResumes = pgTable('userResumes', {
+    id: serial('id').primaryKey(),
+    resumeId: varchar('resumeId').notNull(),
+    userEmail: varchar('userEmail').notNull(),
+    title: varchar('title').notNull(), // e.g., "Full Stack Resume"
+    themeColor: varchar('themeColor').default('#7c3aed'),
+    userName: varchar('userName'),
+    
+    // Structured Data
+    firstName: varchar('firstName'),
+    lastName: varchar('lastName'),
+    jobTitle: varchar('jobTitle'),
+    address: varchar('address'),
+    phone: varchar('phone'),
+    email: varchar('email'),
+    summary: text('summary'),
+    
+    // Arrays stored as JSON
+    experience: json('experience').default([]),
+    education: json('education').default([]),
+    skills: json('skills').default([]),
+    
+    createdAt: timestamp('created_at').defaultNow(),
+});
+
+
+
+
+// Interview Prep
+
+// ... imports ...
+
+export const MockInterview = pgTable('mockInterview', {
+    id: serial('id').primaryKey(),
+    jsonMockResp: text('jsonMockResp').notNull(), // Stores questions as JSON string
+    jobPosition: varchar('jobPosition').notNull(),
+    jobDesc: varchar('jobDesc').notNull(),
+    jobExperience: varchar('jobExperience').notNull(),
+    createdBy: varchar('createdBy').notNull(),
+    createdAt: varchar('createdAt'),
+    mockId: varchar('mockId').notNull()
+});
+
+export const UserAnswer = pgTable('userAnswer', {
+    id: serial('id').primaryKey(),
+    mockIdRef: varchar('mockId').notNull(),
+    question: varchar('question').notNull(),
+    correctAns: text('correctAns'),
+    userAns: text('userAns'),
+    feedback: text('feedback'),
+    rating: varchar('rating'),
+    userEmail: varchar('userEmail'),
+    createdAt: varchar('createdAt'),
+});
+
+
+// job portal
+
+// Add to configs/schema.js
+
+export const JobListing = pgTable('jobListing', {
+    id: serial('id').primaryKey(),
+    positionTitle: varchar('positionTitle').notNull(),
+    companyName: varchar('companyName').notNull(),
+    location: varchar('location').notNull(), // e.g., "Remote", "New York"
+    jobType: varchar('jobType').notNull(), // Full-time, Contract, Internship
+    salary: varchar('salary'), // e.g. "$100k - $120k"
+    jobDescription: text('jobDescription').notNull(),
+    experience: varchar('experience').notNull(), // 0-1 Years, 5+ Years
+    applyUrl: varchar('applyUrl'), // Link to apply
+    createdBy: varchar('createdBy').notNull(),
+    createdAt: varchar('createdAt').notNull(),
+});

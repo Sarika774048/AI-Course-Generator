@@ -5,13 +5,19 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "img.clerk.com",
-        pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "utfs.io", // 👈 This allows UploadThing images to show
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com", // 👈 This allows the avatars to show
+      }
     ],
   },
 };

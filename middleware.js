@@ -3,9 +3,10 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
-  '/explore',          // 👈 Allow everyone to see the Explore page
-  '/course(.*)',       // 👈 Allow everyone to view Course Details pages
-  '/',         
+  '/explore',          
+  '/course(.*)',       
+  '/',
+  '/api/uploadthing(.*)' // 👈 ADD THIS LINE! This fixes the error.
 ])
 
 export default clerkMiddleware(async (auth, req) => {

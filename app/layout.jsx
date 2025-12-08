@@ -11,18 +11,20 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}>
-          <GoogleOneTap />
           
-          {/* Animated Background */}
+          {/* 1. Background First (Stable Order) */}
           <AnimatedBackground />
 
-          {/* Content above background */}
+          {/* 2. Main Content Second */}
           <div className="relative z-10 min-h-screen">
             {children}
           </div>
+
+          {/* 3. GoogleOneTap Last (So it doesn't mess up the index of the first two) */}
+          <GoogleOneTap />
+          
         </body>
       </html>
     </ClerkProvider>
   );
 }
-
